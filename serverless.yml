@@ -34,16 +34,24 @@ provider:
         - Effect: "Allow"
           Action:
             - "s3:ListBucket"
-          Resource: { "Fn::Join" : ["arn:aws:s3:::circle-ci-unit-testing-bucket", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+          Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
         - Effect: "Allow"
           Action:
             - "s3:PutObject"
           Resource:
             Fn::Join:
-              - "arn:aws:s3:::circle-ci-unit-testing-bucket/*"
+              - ""
               - - "arn:aws:s3:::"
                 - "Ref" : "ServerlessDeploymentBucket"
                 - "/*"
+        - Effect: "Allow"
+          Action:
+            - "s3:ListBucket"
+          Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
+        - Effect: "Allow"
+          Action:
+            - "s3:PutObject"
+          Resource: { "Fn::Join": ["", ["arn:aws:s3:::circle-ci-unit-testing-bucket", "/*" ] ] }
         - Effect: "Allow"
           Action:
           - dynamodb:Query
