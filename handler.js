@@ -75,12 +75,8 @@ async function writeCsvToFileAndUpload(filePath, objectKey) {
   var data = getCsvData();
   var output = stringify(data);
   
-  fs.writeFile(filePath, output, function (err) {
-    if (err) {
-      console.log('file write error', err)
-    }
-    uploadFile(filePath, objectKey);
-  });
+  fs.writeFileSync(filePath, output);
+  uploadFile(filePath, objectKey);
 }
 
 function getCsvData() {
