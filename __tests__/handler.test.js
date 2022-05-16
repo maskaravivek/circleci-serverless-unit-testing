@@ -1,16 +1,39 @@
+jest.mock("aws-sdk", () => {
+  return {
+    config: {
+      update() {
+        return {};
+      },
+    },
+    DynamoDB: jest.fn(() => {
+      return {
+        putItem: jest.fn().mockImplementation(() => ({ promise: jest.fn().mockReturnValue(Promise.resolve(true)) })),
+      };
+    }),
+    S3: jest.fn(() => {
+      return {
+        upload: jest.fn().mockImplementation(() => ({ promise: jest.fn().mockReturnValue(Promise.resolve(true)) })),
+      };
+    }),
+  };
+});
 const handler = require('../handler');
 
-describe('lambdaService', () => {
-    beforeEach(() => {
-      jest.restoreAllMocks();
+describe('uploadCsvToS3Handler', () => {
+  beforeEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  test('test uploadFile', async () => {
+    console.log('test uploadfile')
+    const response = await handler.uploadCsvToS3Handler({
+      jobId: 'test-job-id',
     });
 
-    test('test handler message', () => {
-        handler.hello(undefined, undefined, function (error, response) {
-            let body = JSON.parse(response.body);
-            
-            expect(body.message).toBe('Go Serverless v1.0! Your function executed successfully!');
-        });
-    });
+  console.log(response);
+    let body = JSON.parse(response.body);
+
+    expect(body.status).toBe('success');
+    expect(body.jobId).toBe('test-job-id');
   });
-  
+});

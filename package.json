@@ -9,6 +9,7 @@
     "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "aws-sdk-mock": "^5.7.0",
     "jest": "^28.1.0"
   }
 }

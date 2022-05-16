@@ -5,7 +5,5 @@ module.exports = {
     coverageProvider: "v8",
 
     testEnvironment: "node",
-    testMatch: [
-        "__tests__/*.test.ts"
-    ],
+    testMatch: ["**/__tests__/**/*.test.js"],
 };

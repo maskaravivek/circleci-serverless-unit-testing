@@ -25,7 +25,7 @@ module.exports.uploadCsvToS3Handler = async (event) => {
     };
 
     // Call DynamoDB to add the item to the table
-    await ddb.putItem(params).promise();;
+    await ddb.putItem(params).promise();
     return {
       statusCode: 200,
       body: JSON.stringify(
@@ -39,6 +39,7 @@ module.exports.uploadCsvToS3Handler = async (event) => {
       ),
     };
   } catch (error) {
+    console.log('error', error)
     throw Error(`Error in backend: ${error}`)
   }
 };
