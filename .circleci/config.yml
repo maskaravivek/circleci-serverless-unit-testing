@@ -1,26 +1,45 @@
 version: 2.1
 
 orbs:
-  aws-cli: circleci/aws-cli@3.1
-  serverless-framework: circleci/serverless-framework@2.0
-executors:
-  default:
-    docker:
-      - image: 'cimg/node:14.18.2'
-    environment:
-      AWS_REGION: 'us-west-2'
+  aws-cli: circleci/aws-cli@3.0.0
+
+
+commands:
+  aws-oidc-setup:
+    description: Setup AWS auth using OIDC token
+    parameters:
+      aws-role-arn:
+        type: string
+    steps:
+      - run:
+          name: Get short-term credentials
+          command: |
+            STS=($(aws sts assume-role-with-web-identity --role-arn << parameters.aws-role-arn >> --role-session-name "circleciunittesting" --web-identity-token "${CIRCLE_OIDC_TOKEN}" --duration-seconds 900 --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]' --output text))
+            echo "export AWS_ACCESS_KEY_ID=${STS[0]}" >> $BASH_ENV
+            echo "export AWS_SECRET_ACCESS_KEY=${STS[1]}" >> $BASH_ENV
+            echo "export AWS_SESSION_TOKEN=${STS[2]}" >> $BASH_ENV
+      - run:
+          name: Verify AWS credentials
+          command: aws sts get-caller-identity
+
 jobs:
-  deploy:
-    executor: aws-cli/default
+  build:
+    docker:
+      - image: amazon/aws-cli
     steps:
       - checkout
-      - aws-cli/setup:
-          profile-name: WEB IDENTITY PROFILE
-          role-arn: CIRCLE_CI_WEB_IDENTITY_ROLE
-          role-session-name: circleci-session
-          web-identity-token: CIRCLE_OIDC_TOKEN
+      - aws-cli/install
+      - aws-oidc-setup:
+          aws-role-arn: "${CIRCLE_CI_WEB_IDENTITY_ROLE}"
+      - run:
+          name: Test AWS connection
+          command: aws s3 ls
+  
+
+
 workflows:
-  aws-cli:
+  build:
     jobs:
-      - deploy:
-          context: aws
+      - build:
+          context:
+            - "aws-context"
