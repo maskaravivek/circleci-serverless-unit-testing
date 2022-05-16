@@ -18,7 +18,6 @@ jobs:
           profile-name: WEB IDENTITY PROFILE
           role-arn: CIRCLE_CI_WEB_IDENTITY_ROLE
           role-session-name: circleci-session
-          web-identity-token: CIRCLE_OIDC_TOKEN
 workflows:
   aws-cli:
     jobs:
