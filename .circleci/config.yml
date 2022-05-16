@@ -11,18 +11,16 @@ executors:
       AWS_REGION: 'us-west-2'
 jobs:
   deploy:
-    executor: serverless-framework/default
+    executor: aws-cli/default
     steps:
       - checkout
       - aws-cli/setup:
           profile-name: WEB IDENTITY PROFILE
           role-arn: CIRCLE_CI_WEB_IDENTITY_ROLE
           role-session-name: circleci-session
-      - serverless-framework/setup
-      - run:
-          command: serverless deploy -v
-          name: deploy
+          web-identity-token: CIRCLE_OIDC_TOKEN
 workflows:
-  deploy:
+  aws-cli:
     jobs:
-      - deploy
+      - deploy:
+          context: aws
