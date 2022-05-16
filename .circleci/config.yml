@@ -14,7 +14,10 @@ jobs:
     executor: serverless-framework/default
     steps:
       - checkout
-      - aws-cli/setup
+      - aws-cli/setup:
+          profile-name: WEB IDENTITY PROFILE
+          role-arn: CIRCLE_CI_WEB_IDENTITY_ROLE
+          role-session-name: circleci-session
       - serverless-framework/setup
       - run:
           command: serverless deploy -v
