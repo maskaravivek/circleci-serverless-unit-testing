@@ -2,8 +2,7 @@ version: 2.1
 
 orbs:
   aws-cli: circleci/aws-cli@3.0.0
-
-
+  serverless-framework: circleci/serverless-framework@2.0
 commands:
   aws-oidc-setup:
     description: Setup AWS auth using OIDC token
@@ -24,8 +23,7 @@ commands:
 
 jobs:
   build:
-    docker:
-      - image: amazon/aws-cli
+    executor: serverless-framework/default
     steps:
       - checkout
       - aws-cli/install
@@ -34,6 +32,19 @@ jobs:
       - run:
           name: Test AWS connection
           command: aws s3 ls
+      - run:
+          name: Install Serverless CLI and dependencies
+          command: |
+            sudo npm i -g serverless
+            npm install
+ 
+      - run:
+          name: Run tests with code coverage
+          command: npm run coverage
+ 
+      - run:
+          name: Deploy application
+          command: sls deploy
   
 
 
