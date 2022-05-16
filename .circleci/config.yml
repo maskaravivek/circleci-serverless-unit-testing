@@ -30,7 +30,7 @@ jobs:
       - checkout
       - aws-cli/install
       - aws-oidc-setup:
-          aws-role-arn: CIRCLE_CI_WEB_IDENTITY_ROLE
+          aws-role-arn: "${CIRCLE_CI_WEB_IDENTITY_ROLE}"
       - run:
           name: Test AWS connection
           command: aws s3 ls
