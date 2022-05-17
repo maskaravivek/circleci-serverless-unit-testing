@@ -7,12 +7,12 @@ jest.mock("aws-sdk", () => {
     },
     DynamoDB: jest.fn(() => {
       return {
-        putItem: jest.fn().mockImplementation(() => ({ promise: jest.fn().mockReturnValue(Promise.resolve(false)) })),
+        putItem: jest.fn().mockImplementation(() => ({ promise: jest.fn().mockReturnValue(Promise.resolve(true)) })),
       };
     }),
     S3: jest.fn(() => {
       return {
-        upload: jest.fn().mockImplementation(() => ({ promise: jest.fn().mockReturnValue(Promise.resolve(false)) })),
+        upload: jest.fn().mockImplementation(() => ({ promise: jest.fn().mockReturnValue(Promise.resolve(true)) })),
       };
     }),
   };
