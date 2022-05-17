@@ -40,7 +40,7 @@ module.exports.uploadCsvToS3Handler = async (event) => {
     };
   } catch (error) {
     console.log('error', error)
-    throw Error(`Error in backend: ${error}`)
+    throw Error(`Error in backend`)
   }
 };
 

@@ -7,7 +7,9 @@ jest.mock("aws-sdk", () => {
     },
     DynamoDB: jest.fn(() => {
       return {
-        putItem: jest.fn().mockImplementation(() => ({ promise: jest.fn().mockReturnValue(Promise.resolve(false)) })),
+        putItem: jest.fn().mockImplementation(() => {
+          throw new Error();
+        }),
       };
     }),
     S3: jest.fn(() => {
@@ -26,13 +28,8 @@ describe('uploadCsvToS3Handler', () => {
   });
 
   test('test uploadFile', async () => {
-    const response = await handler.uploadCsvToS3Handler({
+    expect(handler.uploadCsvToS3Handler({
       jobId: 'test-job-id',
-    });
-
-    let body = JSON.parse(response.body);
-
-    expect(body.status).toBe('success');
-    expect(body.jobId).toBe('test-job-id');
+    })).rejects.toThrow(new Error('Error in backend'))
   });
 });
